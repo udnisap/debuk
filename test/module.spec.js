@@ -37,9 +37,10 @@ describe('debuk', () => {
     ];
     args.forEach(input => {
       expect(myFn(input)).to.be.equal(prefFn(input));
+      expect(mockedConsole.log).have.been.calledWith('test count: 1');
     });
     expect(mockedConsole.time).have.been.callCount(args.length);
-    expect(mockedConsole.log).have.been.callCount(args.length);
+    expect(mockedConsole.log).have.been.callCount(args.length * 2);
   });
 
   it('Should call with this binding', () => {

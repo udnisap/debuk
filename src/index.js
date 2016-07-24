@@ -6,6 +6,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
+import defer from 'lodash/defer';
+import once from 'lodash/once';
 
 const defaults = {
   name: 'Anonymous',
@@ -19,6 +21,7 @@ const defaults = {
 
 const notSupportedWarning = (method) =>
  console.warn(`${method} is not supported in this environment`); // eslint-disable-line no-console
+
 const debuk = (fn, options = {}) => {
   const {
     name,
@@ -35,28 +38,39 @@ const debuk = (fn, options = {}) => {
   _console.trace = trace && _console.trace || (() => notSupportedWarning('console.trace'));
 
   let callCount = 0;
-  const clearCount = () => setTimeout(
-    () => {
-      callCount && count && _console.log(`${name} count: ${callCount}`);
-      callCount = 0;
-    },
-    0
-  );
-  return (...args) => {
-    // Setup
+  const clearCount = () => {
+    callCount && count && _console.log(`${name} count: ${callCount}`);
+    callCount = 0;
+  };
+
+  const beforeEach = (args) => { // eslint-disable-line no-unused-vars
     trace && _console.trace(fn);
     count && ++callCount && clearCount();
-    profile && _console.profile(name);
     time && _console.time(name);
+    profile && _console.profile(name);
+  };
 
-    const results = fn(...args);
-
-    // Windup
-    time && _console.timeEnd(name);
+  const afterEach = (args, result) => {
     profile && _console.profileEnd(name);
-    params && _console.log(`${name} params ${args} ${results}`);
+    time && _console.timeEnd(name);
+    params && _console.log(`${name} params ${args} ${result}`);
+  };
 
-    return results;
+  const afterTick = (...data) => defer((args, result) => { // eslint-disable-line no-unused-vars
+    count && clearCount();
+    afterTickOnce = once(afterTick); // eslint-disable-line no-use-before-define
+  }, ...data);
+  let afterTickOnce = once(afterTick);
+
+  return (...args) => {
+    // Setup
+    beforeEach(args);
+
+    const result = fn(...args);
+
+    afterEach(args, result);
+    afterTickOnce(args, result);
+    return result;
   };
 };
 
