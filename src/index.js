@@ -53,7 +53,7 @@ const debuk = (fn, options = {}) => {
   const afterEach = (args, result) => {
     profile && _console.profileEnd(name);
     time && _console.timeEnd(name);
-    params && _console.log(`${name} params ${args} ${result}`);
+    params && _console.log(`${name} params ${args} => ${result}`);
   };
 
   const afterTick = (...data) => defer((args, result) => { // eslint-disable-line no-unused-vars
