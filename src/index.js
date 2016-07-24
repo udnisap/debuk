@@ -17,7 +17,7 @@ const defaults = {
   _console: console,
 };
 
-const notSupportedWarning = (method) => console.warn(`${method} is not currently supported in this environment`) ;
+const notSupportedWarning = (method) => console.warn(`${method} is not supported in this environment`) ;
 const debuk = (fn, options = {}) => {
   const {
     name,
