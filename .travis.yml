@@ -24,3 +24,5 @@ branches:
   only:
     - master
     - /^greenkeeper-.*$/
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"

@@ -1,6 +1,5 @@
 {
   "name": "debuk",
-  "version": "0.0.0-semantic-release",
   "description": "Debug and performance test your code with a minimum setup",
   "main": "./lib/index.js",
   "directories": {
