@@ -24,9 +24,9 @@ describe('debuk', () => {
     };
 
     const myFn = (a, b) => a + b;
-    const prefFn = debuk(myFn, { 
+    const prefFn = debuk(myFn, {
       params: true,
-      name: 'test', 
+      name: 'test',
       _console: mockedConsole,
       trace: true,
       profile: true,

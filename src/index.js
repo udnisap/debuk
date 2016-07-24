@@ -17,7 +17,8 @@ const defaults = {
   _console: console,
 };
 
-const notSupportedWarning = (method) => console.warn(`${method} is not supported in this environment`) ;
+const notSupportedWarning = (method) =>
+ console.warn(`${method} is not supported in this environment`); // eslint-disable-line no-console
 const debuk = (fn, options = {}) => {
   const {
     name,
