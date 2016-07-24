@@ -9,18 +9,23 @@
 import defer from 'lodash/defer';
 import once from 'lodash/once';
 
-const defaults = {
+export const defaults = {
   name: 'Anonymous',
   params: false,
   time: true,
   trace: false,
   profile: false,
   count: true,
-  _console: console,
-};
+  console,
+  TEMPLATE: {
+    params: (name, args, result) => `${name} params ${args} => ${result}`,
+    count: (name, callCount) => `${name} count: ${callCount}`,
+    notSupported: (method) =>
+      `${method} is not supported in this environment`, // eslint-disable-line no-console
 
-const notSupportedWarning = (method) =>
- console.warn(`${method} is not supported in this environment`); // eslint-disable-line no-console
+
+  },
+};
 
 const debuk = (fn, options = {}) => {
   const {
@@ -30,22 +35,21 @@ const debuk = (fn, options = {}) => {
     trace,
     profile,
     count,
-    _console,
+    console: _console,
+    TEMPLATE,
   } = Object.assign({}, defaults, { name: fn.name }, options);
 
-  _console.profile = profile && _console.profile || (() => notSupportedWarning('console.profile'));
+  _console.profile = profile &&
+    _console.profile || (() => _console.warn(TEMPLATE.notSupported('console.profile')));
   _console.profileEnd = profile && _console.profileEnd || (() => {});
-  _console.trace = trace && _console.trace || (() => notSupportedWarning('console.trace'));
+  _console.trace = trace &&
+    _console.trace || (() => _console.warn(TEMPLATE.notSupported('console.trace')));
 
   let callCount = 0;
-  const clearCount = () => {
-    callCount && count && _console.log(`${name} count: ${callCount}`);
-    callCount = 0;
-  };
 
   const beforeEach = (args) => { // eslint-disable-line no-unused-vars
     trace && _console.trace(fn);
-    count && ++callCount && clearCount();
+    count && ++callCount;
     time && _console.time(name);
     profile && _console.profile(name);
   };
@@ -53,11 +57,14 @@ const debuk = (fn, options = {}) => {
   const afterEach = (args, result) => {
     profile && _console.profileEnd(name);
     time && _console.timeEnd(name);
-    params && _console.log(`${name} params ${args} => ${result}`);
+    params && _console.log(TEMPLATE.params(name, args, result));
   };
 
   const afterTick = (...data) => defer((args, result) => { // eslint-disable-line no-unused-vars
-    count && clearCount();
+    if (count) {
+      _console.log(TEMPLATE.count(name, callCount));
+      callCount = 0;
+    }
     afterTickOnce = once(afterTick); // eslint-disable-line no-use-before-define
   }, ...data);
   let afterTickOnce = once(afterTick);
