@@ -39,11 +39,10 @@ const debuk = (fn, options = {}) => {
     TEMPLATE,
   } = Object.assign({}, defaults, { name: fn.name }, options);
 
-  _console.profile = profile &&
-    _console.profile || (() => _console.warn(TEMPLATE.notSupported('console.profile')));
-  _console.profileEnd = profile && _console.profileEnd || (() => {});
-  _console.trace = trace &&
-    _console.trace || (() => _console.warn(TEMPLATE.notSupported('console.trace')));
+  _console.profile = _console.profile ||
+    (() => _console.warn(TEMPLATE.notSupported('console.profile')));
+  _console.profileEnd = _console.profileEnd || (() => {});
+  _console.trace = _console.trace || (() => _console.warn(TEMPLATE.notSupported('console.trace')));
 
   let callCount = 0;
 
