@@ -6,8 +6,8 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE.txt file in the root directory of this source tree.
  */
-import defer from 'lodash/defer';
-import once from 'lodash/once';
+import defer from 'lodash.defer';
+import once from 'lodash.once';
 
 export const defaults = {
   name: 'Anonymous',
