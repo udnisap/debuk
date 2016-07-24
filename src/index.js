@@ -18,7 +18,7 @@ export const defaults = {
   count: true,
   console,
   TEMPLATE: {
-    params: (name, args, result) => `${name} params ${args} => ${result}`,
+    params: (name, args, result) => [`${name} params `, args, ' => ', result],
     count: (name, callCount) => `${name} count: ${callCount}`,
     notSupported: (method) =>
       `${method} is not supported in this environment`, // eslint-disable-line no-console
@@ -56,7 +56,7 @@ const debuk = (fn, options = {}) => {
   const afterEach = (args, result) => {
     profile && _console.profileEnd(name);
     time && _console.timeEnd(name);
-    params && _console.log(TEMPLATE.params(name, args, result));
+    params && _console.log(...TEMPLATE.params(name, args, result));
   };
 
   const afterTick = (...data) => defer((args, result) => { // eslint-disable-line no-unused-vars
