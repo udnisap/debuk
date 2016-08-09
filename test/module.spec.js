@@ -133,4 +133,61 @@ describe('debuk', () => {
       });
     });
   });
+
+  describe('Promise', () => {
+    it('Default option to use promise', (cb) => {
+      const mockedConsole = mockConsole();
+      function fnWithPromise(a, b) {
+        return Promise.resolve(a + b);
+      }
+      // const debukedFn = debuk(fnWithPromise, { params: true});
+      const debukedFn = debuk(fnWithPromise, { params: true, console: mockedConsole });
+      const result = debukedFn(1, 5);
+      expect(result).to.be.a.promise;
+      expect(mockedConsole.log).not.have.been.called;
+
+      result.then((value) => {
+        expect(value).to.be.equal(6);
+        expect(mockedConsole.log)
+          .have.been.calledWith(...defaults.TEMPLATE.params('fnWithPromise', [1, 5], 6));
+
+        // count in defered promise
+        _.defer(() => {
+          expect(mockedConsole.log)
+            .have.been.calledWith(defaults.TEMPLATE.count('fnWithPromise', 1));
+          cb();
+        });
+      });
+    });
+
+    it('Return promise when promise flag is not set', (cb) => {
+      const mockedConsole = mockConsole();
+      function fnWithPromise(a, b) {
+        return Promise.resolve(a + b);
+      }
+      const debukedFn = debuk(fnWithPromise, {
+        params: true,
+        promise: false,
+        console: mockedConsole,
+      });
+
+      const result = debukedFn(1, 5);
+      expect(result).to.be.a.promise;
+
+      expect(mockedConsole.log)
+        .have.been.calledWith(...defaults.TEMPLATE.params('fnWithPromise', [1, 5], result));
+
+      // count in defered promise
+      _.defer(() => {
+        expect(mockedConsole.log)
+          .have.been.calledWith(defaults.TEMPLATE.count('fnWithPromise', 1));
+        cb();
+      });
+
+      // value doesnt change on return value
+      result.then((value) => {
+        expect(value).to.be.equal(6);
+      });
+    });
+  });
 });
