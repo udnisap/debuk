@@ -147,6 +147,7 @@ defaults are
     time: true,
     trace: false,
     profile: false,
+    promise: true,
     count: true,
   }
 ```
@@ -157,6 +158,7 @@ defaults are
 - 100% test coverage.
 
 ## Roadmap
+- [x] Functions returning promises
 - [ ] Add ES6 Decorator support
 - [ ] Add support for ES6 Classes
 - [ ] Performance statistics calculation (Mean / SD / Average)

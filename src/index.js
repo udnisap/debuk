@@ -16,6 +16,7 @@ export const defaults = {
   trace: false,
   profile: false,
   count: true,
+  promise: true,
   console,
   TEMPLATE: {
     params: (name, args, result) => [`${name} params `, args, ' => ', result],
@@ -27,6 +28,10 @@ export const defaults = {
   },
 };
 
+function isPromise(val) {
+  return val && typeof val.then === 'function';
+}
+
 const debuk = (fn, options = {}) => {
   const {
     name,
@@ -34,6 +39,7 @@ const debuk = (fn, options = {}) => {
     time,
     trace,
     profile,
+    promise,
     count,
     console: _console,
     TEMPLATE,
@@ -74,8 +80,15 @@ const debuk = (fn, options = {}) => {
 
     const result = fn(...args);
 
-    afterEach(args, result);
-    afterTickOnce(args, result);
+    if (isPromise(result) && promise) {
+      result.then(promiseResult => {
+        afterEach(args, promiseResult);
+        afterTickOnce(args, result);
+      });
+    } else {
+      afterEach(args, result);
+      afterTickOnce(args, result);
+    }
     return result;
   };
 };
