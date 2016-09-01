@@ -28,12 +28,12 @@ var Debuk = require('debuk');
 This can be directly included into client side without any dependencies via
 ```html
 <!--- latest version --->
-<script src='https://npmcdn.com/debuk/dist/debuk.js'>
+<script src='https://unpkg.com/debuk/dist/debuk.js'>
 <!--- minified version --->
-<script src='https://npmcdn.com/debuk/dist/debuk.min.js'>
+<script src='https://unpkg.com/debuk/dist/debuk.min.js'>
 
 <!--- a specific version --->
-<script src='https://npmcdn.com/debuk@1.0.0/dist/debuk.js'>
+<script src='https://unpkg.com/debuk@1.0.0/dist/debuk.js'>
 
 <script>
 var Debuk = debuk.default;
