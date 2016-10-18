@@ -78,6 +78,24 @@ describe('debuk', () => {
         expect(perfFn(...input)).to.be.equal(results);
       });
     });
+    it('Should return the called class when executed', () => {
+      class MyClass {
+        constructor(name) {
+          this.name = name;
+        }
+        speak(words) {
+          return `${this.name}: ${words}`;
+        }
+      }
+      const PerfClass = debuk(MyClass, { params: true });
+      const args = ['Tom', 'Mary'];
+
+      args.forEach(input => {
+        const results = new MyClass(input).speak('test');
+        const perf = new PerfClass(input).speak('test');
+        expect(perf).to.be.equal(results);
+      });
+    });
   });
 
   describe('Count', () => {
