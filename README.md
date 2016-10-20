@@ -48,9 +48,9 @@ you can use the [Node import](#node)
 
 
 ## Usage
-Debuk is a wrapper to any function. You can simply wrap any function with
-`Debuk` and you can use it to check different runtime behaviours of that
-function.
+Debuk is a wrapper to any function or class. You can simply wrap any function or
+class with `Debuk` and you can use it to check different runtime behaviours of that
+function and class.
 
 ```js
 const myFun = function MyFun(){
@@ -61,6 +61,12 @@ const myFun = function MyFun(){
 const myFun = Debuk(function MyFun(){
 // implementation
 });
+
+class MyClass {}
+
+// Wrap class with Debuk
+const DebukClass = Debuk(MyClass);
+const myClass = new DebukClass();
 ```
 
 ### Simple example (Number of method calls)
@@ -160,7 +166,7 @@ defaults are
 ## Roadmap
 - [x] Functions returning promises
 - [ ] Add ES6 Decorator support
-- [ ] Add support for ES6 Classes
+- [x] Add support for ES6 Classes
 - [ ] Performance statistics calculation (Mean / SD / Average)
 
 ## License
