@@ -12,6 +12,7 @@ import debuk, { defaults } from '../src/index.js';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import _ from 'lodash';
+import classMethods from 'class-methods';
 
 chai.use(sinonChai);
 
@@ -76,6 +77,27 @@ describe('debuk', () => {
       args.forEach(input => {
         const results = myFn(...input);
         expect(perfFn(...input)).to.be.equal(results);
+      });
+    });
+    it('Should check multiple method when debuk called', () => {
+      class MyClass {
+        constructor(name) {
+          this.name = name;
+        }
+        speak(words) {
+          return `${this.name}: ${words}`;
+        }
+        sit() {
+          return `${this.name} sit.`;
+        }
+      }
+      const PerfClass = debuk(MyClass);
+      const args = classMethods(MyClass);
+
+      args.forEach(method => {
+        const results = new MyClass();
+        const perf = new PerfClass();
+        expect(perf[method]()).to.be.equal(results[method]());
       });
     });
   });

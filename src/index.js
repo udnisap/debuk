@@ -8,6 +8,7 @@
  */
 import defer from 'lodash.defer';
 import once from 'lodash.once';
+import isClass from 'is-class';
 
 export const defaults = {
   name: 'Anonymous',
@@ -78,7 +79,8 @@ const debuk = (fn, options = {}) => {
     // Setup
     beforeEach(args);
 
-    const result = fn(...args);
+    const Func = fn;
+    const result = isClass(fn) ? new Func(...args) : fn(...args);
 
     if (isPromise(result) && promise) {
       result.then(promiseResult => {
