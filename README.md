@@ -139,7 +139,7 @@ called). Debuk is ideal for that.
 
 ## API
 ```js
-debuk(fn, options)
+debuk(fn, options, bindThis)
 ```
 ####fn
 function to be wrapped
@@ -157,6 +157,8 @@ defaults are
     count: true,
   }
 ```
+####bindThis
+bind `this` to `fn` or not. Default `false`
 
 ## Contributions
 - We use sementic versioning and each build will trigger a version based on the
@@ -165,7 +167,7 @@ defaults are
 
 ## Roadmap
 - [x] Functions returning promises
-- [ ] Add ES6 Decorator support
+- [x] Add ES6 Decorator support
 - [x] Add support for ES6 Classes
 - [ ] Performance statistics calculation (Mean / SD / Average)
 

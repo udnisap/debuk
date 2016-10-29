@@ -3,6 +3,7 @@
   "rules": {
     "no-unused-expressions": 0
   },
+  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,

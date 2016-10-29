@@ -212,4 +212,58 @@ describe('debuk', () => {
       });
     });
   });
+
+  describe('Decorator', () => {
+    it('Correctly wraps class with zero arguments', () => {
+      const construct = sinon.spy();
+      const meth = sinon.spy();
+      @debuk()
+      class MyClass {
+        constructor(n) {
+          construct(n);
+        }
+        method(x) {
+          meth(x);
+        }
+      }
+      const instance = new MyClass(1);
+      instance.method(2);
+      expect(construct).have.been.calledWith(1);
+      expect(meth).have.been.calledWith(2);
+    });
+
+    it('Correctly wraps class with options argument', (cb) => {
+      const mockedConsole = mockConsole();
+      @debuk({ console: mockedConsole })
+      class MyClass {
+        constructor(x) {
+          this.x = x;
+        }
+      }
+      const instance = new MyClass(1);
+      expect(instance.x).to.be.equal(1);
+      expect(mockedConsole.log).not.have.been.called;
+
+      // check in a defer
+      _.defer(() => {
+        expect(mockedConsole.log)
+          .have.been.calledWith(defaults.TEMPLATE.count('MyClass', 1));
+        cb();
+      });
+    });
+
+    it('Correctly wraps method', () => {
+      class MyClass {
+        constructor(x) {
+          this.x = x;
+        }
+        @debuk()
+        method() {
+          return this.x;
+        }
+      }
+      const instance = new MyClass(3);
+      expect(instance.method()).to.be.equal(3);
+    });
+  });
 });

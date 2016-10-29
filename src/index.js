@@ -33,7 +33,7 @@ function isPromise(val) {
   return val && typeof val.then === 'function';
 }
 
-const debuk = (fn, options = {}) => {
+const debukWrap = (fn, options = {}, bindThis = false) => {
   const {
     name,
     params,
@@ -75,12 +75,17 @@ const debuk = (fn, options = {}) => {
   }, ...data);
   let afterTickOnce = once(afterTick);
 
-  return (...args) => {
+  return function (...args) { // eslint-disable-line func-names
     // Setup
     beforeEach(args);
 
     const Func = fn;
-    const result = isClass(fn) ? new Func(...args) : fn(...args);
+    let result;
+    if (isClass(fn)) {
+      result = new Func(...args);
+    } else {
+      result = bindThis ? fn.bind(this)(...args) : fn(...args);
+    }
 
     if (isPromise(result) && promise) {
       result.then(promiseResult => {
@@ -93,6 +98,28 @@ const debuk = (fn, options = {}) => {
     }
     return result;
   };
+};
+
+const debuk = (...args1) => {
+  if (args1.length === 0) {
+    args1.push({}); // add default options
+  }
+  if (args1.length === 1) {
+    if (typeof(args1[0]) === 'object') { // options as first argument - debuk called as decorator
+      const options = args1[0];
+      return (...args2) => {
+        if (args2.length === 1) { // debuk called as class decorator
+          return debukWrap(args2[0], options);
+        }
+        // debuk called as property decorator
+        const [target, key, descriptor] = args2; // eslint-disable-line no-unused-vars
+        descriptor.value = debukWrap(descriptor.value, options, true);
+        return descriptor;
+      };
+    }
+  }
+  // debuk called as function
+  return debukWrap(...args1);
 };
 
 export default debuk;
