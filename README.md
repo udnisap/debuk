@@ -68,6 +68,7 @@ class MyClass {}
 const DebukClass = Debuk(MyClass);
 const myClass = new DebukClass();
 ```
+A detailed explanation available at [DEBUK on Medium](https://medium.com/@udnisap/performance-tuning-testing-in-js-652d897a6a5d)
 
 ### Simple example (Number of method calls)
 
